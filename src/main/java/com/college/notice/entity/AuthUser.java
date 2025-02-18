@@ -21,7 +21,7 @@ public class AuthUser {
 
     private String hashedPassword;
 
-    private String role;
+    private String role; //'USER', 'FACULTY', 'CLUBLEAD', 'ADMIN' create enum in front end
 
     public AuthUser(String id, String email, String name, String hashedPassword, String role){
         this.id = id;

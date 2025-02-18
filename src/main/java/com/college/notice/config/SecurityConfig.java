@@ -64,7 +64,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/signin")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/error/**")).permitAll()
 
-                        .requestMatchers(new AntPathRequestMatcher("/auth/register")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

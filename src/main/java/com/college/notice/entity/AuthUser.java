@@ -17,13 +17,16 @@ public class AuthUser {
 
     private String email;
 
+    private String name;
+
     private String hashedPassword;
 
     private String role;
 
-    public AuthUser(String id, String email, String hashedPassword, String role){
+    public AuthUser(String id, String email, String name, String hashedPassword, String role){
         this.id = id;
         this.email = email;
+        this.name = name;
         this.hashedPassword = hashedPassword;
         this.role = role;
     }
@@ -42,6 +45,14 @@ public class AuthUser {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getHashedPassword() {

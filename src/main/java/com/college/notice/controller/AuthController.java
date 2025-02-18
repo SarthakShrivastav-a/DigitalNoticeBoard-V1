@@ -76,7 +76,7 @@ public class AuthController {
 
         // Hash the password before storing
         String hashedPassword = passwordEncoder.encode(authUser.getHashedPassword());
-        AuthUser newUser = new AuthUser(null, authUser.getEmail(), hashedPassword, authUser.getRole());
+        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(), hashedPassword, authUser.getRole());
 
         // Save to the repository
         AuthUser savedUser = authUserRepository.save(newUser);

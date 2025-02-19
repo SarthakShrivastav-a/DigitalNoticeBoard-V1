@@ -1,11 +1,14 @@
 package com.college.notice.service;
 
 import com.college.notice.entity.Subscription;
+import com.college.notice.exception.SubscriptionNotFoundException;
 import com.college.notice.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class SubscriptionService {
@@ -13,16 +16,28 @@ public class SubscriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
+    @Transactional
     public Subscription subscribe(String userId, List<String> categories) {
+        validateCategories(categories);
+
         Optional<Subscription> existingSubscription = subscriptionRepository.findByUserId(userId);
 
         if (existingSubscription.isPresent()) {
             Subscription subscription = existingSubscription.get();
-            subscription.getCategories().addAll(categories);
+            Set<String> uniqueCategories = new HashSet<>(subscription.getCategories());
+            uniqueCategories.addAll(categories);
+            subscription.setCategories(new ArrayList<>(uniqueCategories));
+            subscription.setLastUpdated(LocalDateTime.now());
             return subscriptionRepository.save(subscription);
         }
 
-        Subscription newSubscription = new Subscription(userId, categories);
+        Subscription newSubscription = Subscription.builder()
+                .userId(userId)
+                .categories(new ArrayList<>(new HashSet<>(categories)))
+                .createdAt(LocalDateTime.now())
+                .lastUpdated(LocalDateTime.now())
+                .build();
+
         return subscriptionRepository.save(newSubscription);
     }
 
@@ -30,15 +45,29 @@ public class SubscriptionService {
         return subscriptionRepository.findByUserId(userId);
     }
 
-    public Subscription unsubscribe(String userId, List<String> categories) {
-        Optional<Subscription> existingSubscription = subscriptionRepository.findByUserId(userId);
+    public List<Subscription> getSubscriptionsByCategory(String category) {
+        return subscriptionRepository.findByCategories(category);
+    }
 
-        if (existingSubscription.isPresent()) {
-            Subscription subscription = existingSubscription.get();
-            subscription.getCategories().removeAll(categories);
-            return subscriptionRepository.save(subscription);
+    @Transactional
+    public Subscription unsubscribe(String userId, List<String> categories) {
+        Subscription subscription = subscriptionRepository.findByUserId(userId)
+                .orElseThrow(() -> new SubscriptionNotFoundException("User not subscribed: " + userId));
+
+        subscription.getCategories().removeAll(categories);
+        subscription.setLastUpdated(LocalDateTime.now());
+
+        return subscriptionRepository.save(subscription);
+    }
+
+    private void validateCategories(List<String> categories) {
+        if (categories == null || categories.isEmpty()) {
+            throw new IllegalArgumentException("Categories cannot be empty");
         }
 
-        throw new RuntimeException("User not subscribed to any category.");
+        Set<String> validCategories = Set.of("ACADEMIC", "SPORTS", "CULTURAL", "PLACEMENT", "GENERAL","EVENTS");
+        if (!validCategories.containsAll(categories)) {
+            throw new IllegalArgumentException("Invalid categories provided");
+        }
     }
 }

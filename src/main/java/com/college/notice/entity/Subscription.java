@@ -1,9 +1,13 @@
 package com.college.notice.entity;
 
+import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @Document(collection = "subscriptions")
 public class Subscription {
 
@@ -11,12 +15,30 @@ public class Subscription {
     private String id;
     private String userId;
     private List<String> categories;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastUpdated;
 
     public Subscription() {}
 
     public Subscription(String userId, List<String> categories) {
         this.userId = userId;
         this.categories = categories;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getId() { return id; }

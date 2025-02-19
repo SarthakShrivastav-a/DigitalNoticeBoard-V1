@@ -11,17 +11,18 @@ public class Notice {
     private String id;
     private String title;
     private String content;
-    private String Category; // enum with EXAMS, CLUBS, PLACEMENTS, GENERAL,EVENTS
+    private String category; // enum with EXAMS, CLUBS, PLACEMENTS, GENERAL,EVENTS
     private String createdBy;
     private LocalDateTime createdAt;
     private String visibility; // we can define an enum for PUBLIC & FACULTY in the frontend ig
-
+    private String editedBy;
     public Notice() {
         this.createdAt = LocalDateTime.now();
     }
-    public Notice(String title, String content, String createdBy, String visibility) {
+    public Notice(String title, String content,String category, String createdBy, String visibility) {
         this.title = title;
         this.content = content;
+        this.category=category;
         this.createdBy = createdBy;
         this.visibility = visibility;
         this.createdAt = LocalDateTime.now();
@@ -46,10 +47,18 @@ public class Notice {
     public void setVisibility(String visibility) { this.visibility = visibility; }
 
     public String getCategory() {
-        return Category;
+        return category;
+    }
+
+    public String getEditedBy() {
+        return editedBy;
+    }
+
+    public void setEditedBy(String editedBy) {
+        this.editedBy = editedBy;
     }
 
     public void setCategory(String category) {
-        Category = category;
+        this.category = category;
     }
 }

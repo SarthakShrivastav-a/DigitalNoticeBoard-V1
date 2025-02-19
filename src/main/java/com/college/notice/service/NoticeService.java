@@ -1,6 +1,8 @@
 package com.college.notice.service;
 
+import com.college.notice.entity.AuthUser;
 import com.college.notice.entity.Notice;
+import com.college.notice.repository.AuthUserRepository;
 import com.college.notice.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ public class NoticeService {
 
     @Autowired
     private NoticeRepository noticeRepository;
+
+    @Autowired
+    private AuthUserRepository authUserRepository;
 
     public Notice createNotice(Notice notice) {
         return noticeRepository.save(notice);
@@ -30,10 +35,13 @@ public class NoticeService {
     }
 
     public Notice updateNotice(String id, Notice updatedNotice, String email) {
+        Optional<AuthUser> edited = authUserRepository.findByEmail(email);
         return noticeRepository.findById(id).map(notice -> {
             notice.setTitle(updatedNotice.getTitle());
             notice.setContent(updatedNotice.getContent());
+            notice.setCategory(updatedNotice.getCategory());
             notice.setVisibility(updatedNotice.getVisibility());
+            notice.setEditedBy(edited.get().getName());
             return noticeRepository.save(notice);
         }).orElseThrow(() -> new RuntimeException("Notice not found"));
     }

@@ -58,7 +58,7 @@ public class NoticeController {
         return noticeService.getNoticeById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #email == principal.username")
+    @PreAuthorize("hasAnyRole('ADMIN','FACULTY')")
     @PutMapping("/update/{id}")
     public Notice updateNotice(@PathVariable String id, @RequestBody Notice updatedNotice) {
         String email = getCurrentUserEmail();

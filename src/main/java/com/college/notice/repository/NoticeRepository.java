@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface NoticeRepository extends MongoRepository<Notice, String> {
     List<Notice> findByVisibility(String visibility);
+
+    List<Notice> findByCategoryIn(List<String> categories);
 }

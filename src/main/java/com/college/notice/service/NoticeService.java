@@ -2,10 +2,14 @@ package com.college.notice.service;
 
 import com.college.notice.entity.AuthUser;
 import com.college.notice.entity.Notice;
+import com.college.notice.entity.Subscription;
 import com.college.notice.repository.AuthUserRepository;
 import com.college.notice.repository.NoticeRepository;
+import com.college.notice.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +21,9 @@ public class NoticeService {
 
     @Autowired
     private AuthUserRepository authUserRepository;
+
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     public Notice createNotice(Notice notice) {
         return noticeRepository.save(notice);
@@ -49,4 +56,16 @@ public class NoticeService {
     public void deleteNotice(String id) {
         noticeRepository.deleteById(id);
     }
+
+    public List<Notice> getNoticesForUser(String email) {
+        Optional<Subscription> subscription = subscriptionRepository.findByUserId(email);
+
+        if (subscription.isEmpty() || subscription.get().getCategories().isEmpty()) {
+            return Collections.emptyList(); // No subscriptions, return empty list
+        }
+
+        List<String> categories = subscription.get().getCategories();
+        return noticeRepository.findByCategoryIn(categories);
+    }
+
 }

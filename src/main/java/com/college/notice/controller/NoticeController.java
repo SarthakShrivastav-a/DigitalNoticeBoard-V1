@@ -70,6 +70,13 @@ public class NoticeController {
     public void deleteNotice(@PathVariable String id) {
         noticeService.deleteNotice(id);
     }
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/subscribed")
+    public List<Notice> getNoticesForSubscribedCategories() {
+        String email = getCurrentUserEmail();
+        return noticeService.getNoticesForUser(email);
+    }
+
 
     private String getCurrentUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

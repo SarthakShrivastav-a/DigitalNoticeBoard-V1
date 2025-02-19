@@ -19,7 +19,7 @@ public class SubscriptionController {
     @Autowired
     private SubscriptionService subscriptionService;
 
-    @PreAuthorize("hasRole('STUDENT') or hasRole('FACULTY')")
+    @PreAuthorize("hasRole('USER') or hasRole('FACULTY')")
     @PostMapping("/subscribe")
     public ResponseEntity<Subscription> subscribe(@RequestBody List<String> categories) {
         String userId = getCurrentUserId();

@@ -31,13 +31,8 @@ public class SubscriptionService {
             return subscriptionRepository.save(subscription);
         }
 
-        Subscription newSubscription = Subscription.builder()
-                .userId(userId)
-                .categories(new ArrayList<>(new HashSet<>(categories)))
-                .createdAt(LocalDateTime.now())
-                .lastUpdated(LocalDateTime.now())
-                .build();
-
+        // Using constructor and setters instead of builder
+        Subscription newSubscription = new Subscription(userId, new ArrayList<>(new HashSet<>(categories)));
         return subscriptionRepository.save(newSubscription);
     }
 
@@ -60,12 +55,20 @@ public class SubscriptionService {
         return subscriptionRepository.save(subscription);
     }
 
+    @Transactional
+    public void deleteSubscription(String userId) {
+        Subscription subscription = subscriptionRepository.findByUserId(userId)
+                .orElseThrow(() -> new SubscriptionNotFoundException("User not subscribed: " + userId));
+
+        subscriptionRepository.delete(subscription);
+    }
+
     private void validateCategories(List<String> categories) {
         if (categories == null || categories.isEmpty()) {
             throw new IllegalArgumentException("Categories cannot be empty");
         }
 
-        Set<String> validCategories = Set.of("ACADEMIC", "SPORTS", "CULTURAL", "PLACEMENT", "GENERAL","EVENTS");
+        Set<String> validCategories = Set.of("ACADEMIC", "SPORTS", "CULTURAL", "PLACEMENT", "GENERAL", "EVENTS");
         if (!validCategories.containsAll(categories)) {
             throw new IllegalArgumentException("Invalid categories provided");
         }

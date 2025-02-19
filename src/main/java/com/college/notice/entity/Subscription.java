@@ -23,6 +23,8 @@ public class Subscription {
     public Subscription(String userId, List<String> categories) {
         this.userId = userId;
         this.categories = categories;
+        this.createdAt = LocalDateTime.now();
+        this.lastUpdated = LocalDateTime.now();
     }
 
     public LocalDateTime getLastUpdated() {

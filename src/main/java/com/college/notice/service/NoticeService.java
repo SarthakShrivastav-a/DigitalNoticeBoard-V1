@@ -7,14 +7,22 @@ import com.college.notice.repository.AuthUserRepository;
 import com.college.notice.repository.NoticeRepository;
 import com.college.notice.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class NoticeService {
+
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private NoticeRepository noticeRepository;
@@ -66,6 +74,12 @@ public class NoticeService {
 
         List<String> categories = subscription.get().getCategories();
         return noticeRepository.findByCategoryIn(categories);
+    }
+
+    public List<Notice> getNoticesBySemester(int semester) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("semester").in(semester));
+        return mongoTemplate.find(query, Notice.class);
     }
 
 }

@@ -31,7 +31,6 @@ public class SubscriptionService {
             return subscriptionRepository.save(subscription);
         }
 
-        // Using constructor and setters instead of builder
         Subscription newSubscription = new Subscription(userId, new ArrayList<>(new HashSet<>(categories)));
         return subscriptionRepository.save(newSubscription);
     }

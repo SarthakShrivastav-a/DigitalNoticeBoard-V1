@@ -3,6 +3,7 @@ package com.college.notice.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "notices")
 public class Notice {
@@ -16,15 +17,18 @@ public class Notice {
     private LocalDateTime createdAt;
     private String visibility; // we can define an enum for PUBLIC & FACULTY in the frontend ig
     private String editedBy;
+    private List<Integer> semester;
+
     public Notice() {
         this.createdAt = LocalDateTime.now();
     }
-    public Notice(String title, String content,String category, String createdBy, String visibility) {
+    public Notice(String title, String content,String category, String createdBy, String visibility,List<Integer> semester) {
         this.title = title;
         this.content = content;
         this.category=category;
         this.createdBy = createdBy;
         this.visibility = visibility;
+        this.semester = semester;
         this.createdAt = LocalDateTime.now();
     }
 
@@ -61,4 +65,7 @@ public class Notice {
     public void setCategory(String category) {
         this.category = category;
     }
+
+
+
 }

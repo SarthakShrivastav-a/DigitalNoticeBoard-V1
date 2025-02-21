@@ -77,6 +77,12 @@ public class NoticeController {
         return noticeService.getNoticesForUser(email);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'FACULTY', 'CLUBLEAD', 'ADMIN')")
+    @GetMapping("/semester/{semester}")
+    public List<Notice> getNoticesBySemester(@PathVariable int semester) {
+        return noticeService.getNoticesBySemester(semester);
+    }
+
 
     private String getCurrentUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

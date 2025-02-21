@@ -10,16 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/auth")
@@ -69,17 +67,32 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AuthUser authUser) {
-        // Check if the user already exists
+
         if (authUserRepository.findByEmail(authUser.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email is already in use");
         }
 
-        // Hash the password before storing
         String hashedPassword = passwordEncoder.encode(authUser.getHashedPassword());
-        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(), hashedPassword, authUser.getRole());
-
-        // Save to the repository
+        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(), hashedPassword);
+        newUser.setRole("USER");
         AuthUser savedUser = authUserRepository.save(newUser);
         return ResponseEntity.ok(savedUser);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/registerAdmin")
+    public ResponseEntity<?> register(@RequestBody AuthUser authUser, @RequestParam String role) {
+
+        if (authUserRepository.findByEmail(authUser.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email is already in use");
+        }
+
+        String hashedPassword = passwordEncoder.encode(authUser.getHashedPassword());
+        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(), hashedPassword);
+        newUser.setRole(role);
+        AuthUser savedUser = authUserRepository.save(newUser);
+        return ResponseEntity.ok(savedUser);
+    }
+
+
 }

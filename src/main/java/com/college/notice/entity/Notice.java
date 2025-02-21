@@ -67,5 +67,11 @@ public class Notice {
     }
 
 
+    public List<Integer> getSemester() {
+        return semester;
+    }
 
+    public void setSemester(List<Integer> semester) {
+        this.semester = semester;
+    }
 }

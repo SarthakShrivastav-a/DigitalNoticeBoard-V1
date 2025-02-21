@@ -75,6 +75,15 @@ public class NoticeController {
     public List<Notice> getNoticesForSubscribedCategories() {
         String email = getCurrentUserEmail();
         return noticeService.getNoticesForUser(email);
+
+        /*
+        * ACADEMIC → Exam schedules, syllabus updates, assignments, etc.
+        PLACEMENT → Job and internship opportunities, company visits.
+        EXAMS → Exam dates, results, hall ticket distribution.
+        GENERAL → Miscellaneous announcements (college holidays, rules, policies).
+        SPORTS → Tournament announcements, team selection, practice schedules.
+        CULTURAL → Club activities, competition results, general participation info.
+        * */
     }
 
     @PreAuthorize("hasAnyRole('USER', 'FACULTY', 'CLUBLEAD', 'ADMIN')")

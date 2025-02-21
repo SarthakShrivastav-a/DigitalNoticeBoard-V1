@@ -51,4 +51,24 @@ public class EventController {
         return ResponseEntity.ok(eventService.registerForEvent(eventId, userEmail, customFields));
     }
 
+    @PreAuthorize("hasAnyRole('FACULTY', 'ADMIN')")
+    @PutMapping("/{eventId}/status")
+    public ResponseEntity<Event> updateEventStatus(@PathVariable String eventId,
+                                                   @RequestParam Event.EventStatus status) {
+        return ResponseEntity.ok(eventService.updateEventStatus(eventId, status));
+    }
+
+    @PreAuthorize("hasAnyRole('FACULTY', 'ADMIN')")
+    @PutMapping("/{eventId}/attendance")
+    public ResponseEntity<Event> markAttendance(@PathVariable String eventId,
+                                                @RequestParam String userEmail,
+                                                @RequestParam boolean attended) {
+        return ResponseEntity.ok(eventService.markAttendance(eventId, userEmail, attended));
+    }
+
+    @PreAuthorize("hasAnyRole('FACULTY', 'ADMIN')")
+    @GetMapping("/{eventId}/attendance")
+    public ResponseEntity<List<Registration>> getEventAttendance(@PathVariable String eventId) {
+        return ResponseEntity.ok(eventService.getEventAttendance(eventId));
+    }
 }

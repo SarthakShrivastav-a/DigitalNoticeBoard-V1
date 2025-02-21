@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,10 +47,9 @@ public class EventController {
 
     @PreAuthorize("hasAnyRole('USER', 'FACULTY')")
     @PostMapping("/{eventId}/register")
-    public ResponseEntity<Event> registerForEvent(@PathVariable String eventId,
-                                                  @RequestParam String userEmail,
-                                                  @RequestBody Map<String, String> customFields) {
-        return ResponseEntity.ok(eventService.registerForEvent(eventId, userEmail, customFields));
+    public ResponseEntity<Event> registerForEvent(@PathVariable String eventId) {
+        String email = getCurrentUserEmail();
+        return ResponseEntity.ok(eventService.registerForEvent(eventId, email));
     }
 
     @PreAuthorize("hasAnyRole('FACULTY', 'ADMIN')")
@@ -70,5 +71,13 @@ public class EventController {
     @GetMapping("/{eventId}/attendance")
     public ResponseEntity<List<Registration>> getEventAttendance(@PathVariable String eventId) {
         return ResponseEntity.ok(eventService.getEventAttendance(eventId));
+    }
+    private String getCurrentUserEmail() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
+        }
     }
 }

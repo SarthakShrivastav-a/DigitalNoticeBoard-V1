@@ -27,10 +27,12 @@ public class AuthUser {
 
     private String role; //'USER', 'FACULTY', 'CLUBLEAD', 'ADMIN' create enum in front end
 
-    public AuthUser(String id, String email, String name, String hashedPassword){
+    public AuthUser(String id, String email, String name,String semester,String erp, String hashedPassword){
         this.id = id;
         this.email = email;
         this.name = name;
+        this.semester = semester;
+        this.erp = erp;
         this.hashedPassword = hashedPassword;
     }
 
@@ -76,5 +78,21 @@ public class AuthUser {
 
     public GrantedAuthority getAuthority() {
         return new SimpleGrantedAuthority(role); //for role
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public String getErp() {
+        return erp;
+    }
+
+    public void setErp(String erp) {
+        this.erp = erp;
     }
 }

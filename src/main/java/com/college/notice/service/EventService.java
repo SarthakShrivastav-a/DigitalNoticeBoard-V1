@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,7 @@ public class EventService {
         String createdBy = authentication.getName();
         event.setCreatedBy(createdBy);
         event.setCreatedAt(LocalDateTime.now());
+        event.setRegistrations(new ArrayList<>());
         event.setStatus(Event.EventStatus.UPCOMING);
         return eventRepository.save(event);
     }
@@ -62,14 +64,14 @@ public class EventService {
 
     @PreAuthorize("hasAnyRole('USER', 'FACULTY')")
     @Transactional
-    public Event registerForEvent(String eventId, String userEmail, Map<String, String> customFields) {
+    public Event registerForEvent(String eventId, String userEmail) { //, Map<String, String> customFields
         Event event = getEventById(eventId);
         validateRegistration(event, userEmail);
 
         Registration registration = new Registration();
         registration.setUserEmail(userEmail);
         registration.setRegistrationDate(LocalDateTime.now());
-        registration.setCustomFields(customFields);
+//        registration.setCustomFields(customFields);
 
         if (event.getRegistrations().size() >= event.getCapacity()) {
             registration.setStatus(Registration.RegistrationStatus.PENDING);

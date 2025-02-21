@@ -73,7 +73,7 @@ public class AuthController {
         }
 
         String hashedPassword = passwordEncoder.encode(authUser.getHashedPassword());
-        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(), hashedPassword);
+        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(),authUser.getSemester(),authUser.getErp(), hashedPassword);
         newUser.setRole("USER");
         AuthUser savedUser = authUserRepository.save(newUser);
         return ResponseEntity.ok(savedUser);
@@ -88,7 +88,7 @@ public class AuthController {
         }
 
         String hashedPassword = passwordEncoder.encode(authUser.getHashedPassword());
-        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(), hashedPassword);
+        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(),null,null, hashedPassword);
         newUser.setRole(role);
         AuthUser savedUser = authUserRepository.save(newUser);
         return ResponseEntity.ok(savedUser);

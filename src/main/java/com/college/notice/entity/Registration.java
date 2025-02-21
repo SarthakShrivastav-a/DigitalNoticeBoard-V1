@@ -8,7 +8,7 @@ public class Registration {
     private RegistrationStatus status;
     private LocalDateTime registrationDate;
     private boolean attended;
-    private Map<String, String> customFields;
+//    private Map<String, String> customFields;
 
     public enum RegistrationStatus {
         PENDING, CONFIRMED, CANCELLED
@@ -38,13 +38,13 @@ public class Registration {
         this.registrationDate = registrationDate;
     }
 
-    public Map<String, String> getCustomFields() {
-        return customFields;
-    }
-
-    public void setCustomFields(Map<String, String> customFields) {
-        this.customFields = customFields;
-    }
+//    public Map<String, String> getCustomFields() {
+//        return customFields;
+//    }
+//
+//    public void setCustomFields(Map<String, String> customFields) {
+//        this.customFields = customFields;
+//    }
 
     public boolean isAttended() {
         return attended;

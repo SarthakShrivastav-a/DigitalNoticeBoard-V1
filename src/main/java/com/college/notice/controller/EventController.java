@@ -17,13 +17,13 @@ public class EventController {
     EventService eventService;
 
 
-    @PreAuthorize("hasRole('STUDENT')")
-    @PostMapping("/events/{eventId}/register")
-    public ResponseEntity<Event> registerForEvent(@PathVariable String eventId) {
-        String userEmail = getCurrentUserEmail(); // Fetch user email in controller
-        Event event = eventService.registerForEvent(eventId, userEmail);
-        return ResponseEntity.ok(event);
-    }
+//    @PreAuthorize("hasRole('STUDENT')")
+//    @PostMapping("/events/{eventId}/register")
+//    public ResponseEntity<Event> registerForEvent(@PathVariable String eventId) {
+//        String userEmail = getCurrentUserEmail(); // Fetch user email in controller
+//        Event event = eventService.registerForEvent(eventId, userEmail);
+//        return ResponseEntity.ok(event);
+//    }
 
     private String getCurrentUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

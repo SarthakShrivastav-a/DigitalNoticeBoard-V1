@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Document(collection = "events")
 public class Event {
@@ -15,42 +17,213 @@ public class Event {
     private String category;
     private LocalDateTime eventDate;
     private LocalDateTime registrationDeadline;
-    private List<String> registeredUsers;
-    private boolean isCompleted;
+    private List<Registration> registrations;
+    private String formLink;
+    private EventStatus status;
+    private String location;
+    private boolean isOnline;
+    private String organizer;
+    private String department;
+    private Set<String> tags;
+    private EventVisibility visibility;
+    private String bannerUrl;
+    private int capacity;
+    private List<String> waitlist;
+    private double registrationFee;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String createdBy;
+    private boolean isDeleted;
 
-    public Event() {}
-
-    public Event(String title, String description, String category, LocalDateTime eventDate, LocalDateTime registrationDeadline) {
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.eventDate = eventDate;
-        this.registrationDeadline = registrationDeadline;
-        this.registeredUsers = new ArrayList<>();
-        this.isCompleted = false;
+    public enum EventStatus {
+        UPCOMING, ONGOING, COMPLETED, CANCELLED
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public enum EventVisibility {
+        PUBLIC, PRIVATE, DEPARTMENT
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getId() {
+        return id;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public String getTitle() {
+        return title;
+    }
 
-    public LocalDateTime getEventDate() { return eventDate; }
-    public void setEventDate(LocalDateTime eventDate) { this.eventDate = eventDate; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public LocalDateTime getRegistrationDeadline() { return registrationDeadline; }
-    public void setRegistrationDeadline(LocalDateTime registrationDeadline) { this.registrationDeadline = registrationDeadline; }
+    public String getDescription() {
+        return description;
+    }
 
-    public List<String> getRegisteredUsers() { return registeredUsers; }
-    public void setRegisteredUsers(List<String> registeredUsers) { this.registeredUsers = registeredUsers; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public boolean isCompleted() { return isCompleted; }
-    public void setCompleted(boolean completed) { isCompleted = completed; }
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(LocalDateTime eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public LocalDateTime getRegistrationDeadline() {
+        return registrationDeadline;
+    }
+
+    public void setRegistrationDeadline(LocalDateTime registrationDeadline) {
+        this.registrationDeadline = registrationDeadline;
+    }
+
+    public List<Registration> getRegistrations() {
+        return registrations;
+    }
+
+    public void setRegistrations(List<Registration> registrations) {
+        this.registrations = registrations;
+    }
+
+    public String getFormLink() {
+        return formLink;
+    }
+
+    public void setFormLink(String formLink) {
+        this.formLink = formLink;
+    }
+
+    public EventStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EventStatus status) {
+        this.status = status;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
+
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
+    public EventVisibility getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(EventVisibility visibility) {
+        this.visibility = visibility;
+    }
+
+    public String getBannerUrl() {
+        return bannerUrl;
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        this.bannerUrl = bannerUrl;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public List<String> getWaitlist() {
+        return waitlist;
+    }
+
+    public void setWaitlist(List<String> waitlist) {
+        this.waitlist = waitlist;
+    }
+
+    public double getRegistrationFee() {
+        return registrationFee;
+    }
+
+    public void setRegistrationFee(double registrationFee) {
+        this.registrationFee = registrationFee;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 }

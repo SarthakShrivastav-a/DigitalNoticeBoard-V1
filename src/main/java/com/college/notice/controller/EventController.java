@@ -1,36 +1,54 @@
 package com.college.notice.controller;
 
 import com.college.notice.entity.Event;
+import com.college.notice.entity.Registration;
 import com.college.notice.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/events")
 public class EventController {
 
-
     @Autowired
-    EventService eventService;
+    private EventService eventService;
 
+    @GetMapping
+    public ResponseEntity<Page<Event>> getAllEvents(Pageable pageable) {
+        return ResponseEntity.ok(eventService.getAllEvents(pageable));
+    }
 
-//    @PreAuthorize("hasRole('STUDENT')")
-//    @PostMapping("/events/{eventId}/register")
-//    public ResponseEntity<Event> registerForEvent(@PathVariable String eventId) {
-//        String userEmail = getCurrentUserEmail(); // Fetch user email in controller
-//        Event event = eventService.registerForEvent(eventId, userEmail);
-//        return ResponseEntity.ok(event);
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Event> getEventById(@PathVariable String id) {
+        return ResponseEntity.ok(eventService.getEventById(id));
+    }
 
-    private String getCurrentUserEmail() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername(); // Assuming username is email
-        }
-        throw new IllegalStateException("User not authenticated.");
+    @PreAuthorize("hasAnyRole('FACULTY', 'ADMIN')")
+    @PostMapping
+    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+        return ResponseEntity.ok(eventService.createEvent(event));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable String id) {
+        eventService.deleteEvent(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyRole('USER', 'FACULTY')")
+    @PostMapping("/{eventId}/register")
+    public ResponseEntity<Event> registerForEvent(@PathVariable String eventId,
+                                                  @RequestParam String userEmail,
+                                                  @RequestBody Map<String, String> customFields) {
+        return ResponseEntity.ok(eventService.registerForEvent(eventId, userEmail, customFields));
     }
 
 }

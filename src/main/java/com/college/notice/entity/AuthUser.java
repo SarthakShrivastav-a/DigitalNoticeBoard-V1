@@ -23,17 +23,12 @@ public class AuthUser {
 
     private String erp;
 
-    private String hashedPassword;
-
-    private String role; //'USER', 'FACULTY', 'CLUBLEAD', 'ADMIN' create enum in front end
-
-    public AuthUser(String id, String email, String name,String semester,String erp, String hashedPassword){
+    public AuthUser(String id, String email, String name,String semester,String erp){
         this.id = id;
         this.email = email;
         this.name = name;
         this.semester = semester;
         this.erp = erp;
-        this.hashedPassword = hashedPassword;
     }
 
     public String getId() {
@@ -59,27 +54,6 @@ public class AuthUser {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public GrantedAuthority getAuthority() {
-        return new SimpleGrantedAuthority(role); //for role
-    }
-
     public String getSemester() {
         return semester;
     }

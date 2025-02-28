@@ -1,10 +1,13 @@
 package com.college.notice.controller;
 
 
+import com.college.notice.entity.AUser;
 import com.college.notice.entity.AuthUser;
 import com.college.notice.entity.LoginRequest;
+import com.college.notice.entity.SignUp;
 import com.college.notice.jwt.AuthUserService;
 import com.college.notice.jwt.JwtUtility;
+import com.college.notice.repository.AUserRepository;
 import com.college.notice.repository.AuthUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +33,12 @@ public class AuthController {
 
     @Autowired
     private JwtUtility jwtUtility;
+//
+//    @Autowired
+//    private AuthUserService authUserService;
 
     @Autowired
-    private AuthUserService authUserService;
+    private AUserRepository userRepository;
 
     @Autowired
     private AuthUserRepository authUserRepository;
@@ -66,33 +72,36 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody AuthUser authUser) {
+    public ResponseEntity<?> registerUser(@RequestBody SignUp signUp) {
 
-        if (authUserRepository.findByEmail(authUser.getEmail()).isPresent()) {
+        if (authUserRepository.findByEmail(signUp.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email is already in use");
         }
 
-        String hashedPassword = passwordEncoder.encode(authUser.getHashedPassword());
-        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(),authUser.getSemester(),authUser.getErp(), hashedPassword);
-        newUser.setRole("USER");
+        String hashedPassword = passwordEncoder.encode(signUp.getPassword());
+        AuthUser newUser = new AuthUser(null, signUp.getEmail(), signUp.getName(), signUp.getSemester(), signUp.getErp());
+        AUser user = new AUser(signUp.getErp(), signUp.getEmail(), hashedPassword);
+        user.setRole("USER");
         AuthUser savedUser = authUserRepository.save(newUser);
+        AUser save = userRepository.save(user);
         return ResponseEntity.ok(savedUser);
+//    }
+//
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/registerAdmin")
+//    public ResponseEntity<?> register(@RequestBody SignUp signUp, @RequestParam String role) {
+//
+//        if (authUserRepository.findByEmail(signUp.getEmail()).isPresent()) {
+//            return ResponseEntity.badRequest().body("Email is already in use");
+//        }
+//
+//        String hashedPassword = passwordEncoder.encode(signUp.getPassword());
+//
+//        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(),null,null, hashedPassword);
+//        newUser.setRole(role);
+//        AuthUser savedUser = authUserRepository.save(newUser);
+//        return ResponseEntity.ok(savedUser);
+//    }
+
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/registerAdmin")
-    public ResponseEntity<?> register(@RequestBody AuthUser authUser, @RequestParam String role) {
-
-        if (authUserRepository.findByEmail(authUser.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email is already in use");
-        }
-
-        String hashedPassword = passwordEncoder.encode(authUser.getHashedPassword());
-        AuthUser newUser = new AuthUser(null, authUser.getEmail(), authUser.getName(),null,null, hashedPassword);
-        newUser.setRole(role);
-        AuthUser savedUser = authUserRepository.save(newUser);
-        return ResponseEntity.ok(savedUser);
-    }
-
-
 }
